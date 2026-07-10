@@ -121,7 +121,7 @@
     #experience .container{display:flex;flex-direction:column;align-items:flex-start}
     #experience .sec-title{color:var(--green)}
     .exp-list{display:flex;flex-direction:column;gap:3rem;max-width:600px}
-    .exp-role{font-weight:700;font-size:1.05rem;margin-bottom:.35rem;
+    .exp-role{font-weight:700;font-size:1.05rem;margin-bottom:.35rem;margin;
       display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
     .badge-current{display:inline-block;padding:.12rem .55rem;
       background:var(--green);color:var(--black);font-size:.6rem;
@@ -172,6 +172,33 @@
     .cert-name{font-weight:700;font-size:.85rem;margin-bottom:.3rem}
     .cert-by{font-size:.68rem;color:rgba(255,255,255,.38)}
 
+    /* ── BLOGS ── */
+    #blogs .sec-title{color:var(--pink)}
+    .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,260px));gap:1.8rem}
+    .blog-card{position:relative;display:block;width:220px;aspect-ratio:3/4;border-radius:14px;
+      overflow:hidden;text-decoration:none;background:#0a0a0a;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 10px 30px rgba(0,0,0,.5);
+      transform:perspective(700px) rotateX(0) rotateY(0) scale(1);
+      transition:transform .15s ease-out,box-shadow .25s ease,border-color .25s ease;
+      will-change:transform;}
+    .blog-card:hover{border-color:rgba(255,0,204,.4);
+      box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 30px rgba(255,0,204,.18);}
+    .blog-thumb{position:absolute;inset:0;background-size:cover;background-position:center;
+      background-color:#141014;
+      background-image:
+        radial-gradient(circle at 30% 20%,rgba(255,0,204,.16),transparent 55%),
+        radial-gradient(circle at 75% 70%,rgba(90,0,130,.28),transparent 55%),
+        linear-gradient(180deg,#1a1220 0%,#0a0a0a 100%);}
+    .blog-card::before{content:'';position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(220px circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.08),transparent 60%);
+      opacity:0;transition:opacity .25s ease;}
+    .blog-card:hover::before{opacity:1}
+    .blog-overlay{position:absolute;left:0;right:0;bottom:0;padding:1.1rem 1.2rem 1.2rem;
+      background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.92) 100%);}
+    .blog-title{font-family:'Anorthic',serif;font-size:1.5rem;line-height:1.05;color:#fff;margin-bottom:.4rem}
+    .blog-sub{font-size:.68rem;line-height:1.4;color:rgba(255,255,255,.55)}
+
     /* ── CONTACT ── */
     #contact{min-height:70vh}
     #contact .container{display:flex;flex-direction:column;align-items:center;text-align:center}
@@ -220,6 +247,7 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#certifications">Certs</a></li>
+    <li><a href="#blogs">Blogs</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -408,6 +436,22 @@
       <div class="cert-card fi d2"><div class="cert-name">ISC2 Certified in Cybersecurity</div><div class="cert-by">ISC2 · Nov 2025</div></div>
       <div class="cert-card fi d3"><div class="cert-name">NPTEL — Software Testing</div><div class="cert-by">IIT / NPTEL</div></div>
       <div class="cert-card fi d4"><div class="cert-name">Modern Application — Core Technical Skills</div><div class="cert-by">VMware IT Academy</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOGS -->
+<section id="blogs">
+  <div class="container">
+    <h2 class="sec-title fi">Blogs</h2>
+    <div class="blog-grid">
+      <a class="blog-card fi d1" href="https://www.linkedin.com/in/karthik-ajay/" target="_blank" rel="noopener">
+        <div class="blog-thumb" style="background-image:url('img/fifa.jpg')"></div>
+        <div class="blog-overlay">
+          <div class="blog-title">The Hidden<br>Referee</div>
+          <div class="blog-sub">How Information Security protects the game we love</div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -669,6 +713,24 @@ const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
 },{threshold:.12});
 document.querySelectorAll('.fi,.fi-left,.fi-right').forEach(el=>obs.observe(el));
+
+/* ════════════════════════════════════════
+   BLOG CARD TILT
+════════════════════════════════════════ */
+document.querySelectorAll('.blog-card').forEach(card=>{
+  const strength=12;
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+    const rx=(0.5-py)*strength, ry=(px-0.5)*strength;
+    card.style.transform=`perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.04)`;
+    card.style.setProperty('--gx',(px*100)+'%');
+    card.style.setProperty('--gy',(py*100)+'%');
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(700px) rotateX(0) rotateY(0) scale(1)';
+  });
+});
 
 /* ════════════════════════════════════════
    BOOT
